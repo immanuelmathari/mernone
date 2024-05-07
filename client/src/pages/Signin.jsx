@@ -1,13 +1,20 @@
 import React from "react"
 import { Link , useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { signinFailure, signinStart, signinSuccess } from "../redux/userSlice"
+import OAuth from "../components/OAuth"
 
 
 export default function Signin()
 {
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({});
-    const [error,setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    // const [error,setError] = useState(null);
+    // const [loading, setLoading] = useState(false);
+    const userState = useSelector((state) => state.user);
+    const loading = userState.loading;
+    const error = userState.error;
     const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData(
@@ -21,6 +28,7 @@ export default function Signin()
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
+            dispatch(signinStart);
             const res = await fetch('http://localhost:3000/api/auth/signin',
         {
             method: 'POST',
@@ -34,18 +42,15 @@ export default function Signin()
         console.log(data);
         if(data.success === false)
         {
-          setLoading(false);
-          setError(data.message);
+          dispatch(signinFailure(data.message));
           return;
         }
-        setLoading(false);
-        setError(null);
+        dispatch(signinSuccess(data));
         navigate('/');
         }
         catch (error)
         {
-            setLoading(false);
-            setError(error.message);
+            dispatch(signinFailure(error.message));
         }
     }
     return (
@@ -57,6 +62,7 @@ export default function Signin()
             <input type='email' onChange={handleChange} placeholder='Email' id='email' className='p-3 border rounded-lg' />
             <input type='password'  onChange={handleChange} placeholder='Password' id='password' className='p-3 border rounded-lg' />
             <button  disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? "loading" : "Sign in"}</button>
+            <OAuth/>
            </form>
            <div className='flex gap-3 mt-5'>
             <p>Do not Have an account?</p>
