@@ -3,9 +3,10 @@ import  Mongoose  from "mongoose";
 import dotenv from "dotenv";
 import userrouter from "./routes/user.route.js"
 import authrouter from "./routes/auth.route.js"
+import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 dotenv.config();
-
 
 Mongoose.connect(process.env.MONGO)
         .then(() => {
@@ -18,6 +19,12 @@ Mongoose.connect(process.env.MONGO)
 const app = express();
 
 app.use(express.json());
+
+app.use(cookieParser());
+
+app.use(cors());
+
+
 
 // Enable CORS middleware
 app.use((req, res, next) => {
@@ -32,9 +39,12 @@ app.use((req, res, next) => {
 
 
 
+
 app.listen(3000, ()=>{
     console.log('server is running on port 3000');
 });
+
+
 
 app.use('/api/user', userrouter);
 // previously looked like this
@@ -42,6 +52,8 @@ app.use('/api/user', userrouter);
 
 // })
 app.use('/api/auth', authrouter);
+
+
 
 // this is a middleware
 app.use((err,req,res,next) => {
