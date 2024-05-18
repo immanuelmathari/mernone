@@ -10,7 +10,7 @@ dotenv.config();
 
 Mongoose.connect(process.env.MONGO)
         .then(() => {
-            console.log("connected");
+            console.log("connected to MongoDB");
         })
         .catch((err) => {
             console.log(err);
@@ -64,7 +64,7 @@ app.use((err,req,res,next) => {
     return res.status(statusCode).json({
         success : false,
         statusCode,
-        message
+        message,
     });
 
 });

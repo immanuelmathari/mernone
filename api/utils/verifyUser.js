@@ -8,10 +8,10 @@ export const verifyUser = (req, res, next) => {
     if (!token) return next(errorHandler(401, 'Unauthorizedd'));
 
     jwt.verify(token, process.env.JWT_SECRET,(err,user) => {
-        if (err) return next(errorHandler(403, 'forbidden'));
+        if (err) return next(errorHandler(403, 'Token in not valid'));
         
             req.user = user;
             next();
         });
     
-};
+}

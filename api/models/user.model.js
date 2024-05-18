@@ -18,7 +18,7 @@ const UserSchema = new Mongoose.Schema({
     avatar : {
         type : String,
         defalut : "../../client/public/the goal.jpg", 
-    }
+    },
 }, {timestamps : true});
 
 const User = Mongoose.model('User',UserSchema);
