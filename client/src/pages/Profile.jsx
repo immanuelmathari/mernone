@@ -103,6 +103,8 @@ export default function Profile() {
 
   const handleSignOut = async () => {
     try {
+      // this a request 
+      // a request to the server.
       await fetch('/api/auth/signout');
       dispatch(signOut())
     } catch (error) {
