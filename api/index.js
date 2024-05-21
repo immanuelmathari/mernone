@@ -3,6 +3,7 @@ import  Mongoose  from "mongoose";
 import dotenv from "dotenv";
 import userrouter from "./routes/user.route.js"
 import authrouter from "./routes/auth.route.js"
+import listingRouter from "./routes/listing.route.js"
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 
@@ -57,6 +58,9 @@ app.use('/api/user', userrouter);
 
 // })
 app.use('/api/auth', authrouter);
+
+app.use('/api/listing', listingRouter);
+// so now we create this route
 
 
 
