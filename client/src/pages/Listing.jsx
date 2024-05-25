@@ -6,6 +6,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking, FaShare } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import Contact from '../components/Contact';
 
 export default function Listing() {
     SwiperCore.use(Navigation);
@@ -15,13 +16,16 @@ export default function Listing() {
     const [copied, setCopied] = useState(false);
     const [contact, setContact] = useState(false);
     const params = useParams();
+    // note that currentUser should be destructured
     const {currentUser} = useSelector((state) => state.user);
     useEffect(() => {
         const fetchListing = async () => {
             try{
                 setLoading(true);
                 const res = await fetch(`/api/listing/get/${params.listingId}`);
+                console.log(res);
                 const data = await res.json();
+                console.log(data);
                 if (data.success === false) {
                     setError(true);
                     setLoading(false)
@@ -129,12 +133,15 @@ export default function Listing() {
                         {listing.furnished ? 'Furnished' : 'Unfurnished'}
                     </li>
                 </ul>
-                {currentUser && listing.userRef !== currentUser._id && !contact && (
-                    <button className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'>
+                {currentUser && listing.userRef !== currentUser._id && !contact &&(
+                    <button onClick={() => setContact(true)} className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'>
                         Contact Landlord
                     </button>
+
                 )}
-                {/* {contact && } */}
+                {/* we want to send listing information as a prop so that we can have the details of what we will contact the landlord with*/}
+                {/* We also want to bring in information of a landlord */}
+                {contact && <Contact listing={listing}/>}
             </div>
 
             </div>
