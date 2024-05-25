@@ -130,6 +130,28 @@ export default function Profile() {
       setShowListingsError(true);
     }
   }
+
+  // listing id was  our button input
+  // onClick={() => handleListingDelete(listing._id)}
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method : 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+
+      setUserListings((prev) => {
+        prev.filter((listing) => listing._id !== listingId)
+      });
+    } catch (error)
+    {
+      console.log(error);
+    }
+  };
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -227,7 +249,8 @@ export default function Profile() {
             <p>{listing.name}</p>
           </Link>
           <div className='flex flex-col'>
-            <button className='text-red-700 uppercase'>
+            {/* if you dont give it as an arrow function this method will always be done even when you dont want. */}
+            <button className='text-red-700 uppercase' onClick={() => handleListingDelete(listing._id)}>
               Delete
             </button>
             <button className='text-green-700 uppercase'>
