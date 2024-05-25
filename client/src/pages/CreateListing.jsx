@@ -157,7 +157,7 @@ export default function CreateListing() {
         <form className='flex flex-col sm:flex-row gap-4 ' onSubmit={handleSubmit}>
             {/* flex-1 sets the width of the inputs */}
             <div className='flex flex-col gap-4 flex-1'>
-                <input type='text' placeholder='Name' className='border p-3 rounded-lg' id='name' maxLength='62' minLength='62' required onChange={handleChange} value={formData.name}/>
+                <input type='text' placeholder='Name' className='border p-3 rounded-lg' id='name' maxLength='62' minLength='2' required onChange={handleChange} value={formData.name}/>
                 <textarea type='text' placeholder='Description' className='border p-3 rounded-lg' id='description' required onChange={handleChange} value={formData.description}/>
                 <input type='text' placeholder='Address' className='border p-3 rounded-lg' id='address' required onChange={handleChange} value={formData.address}/>
                 <div className="flex gap-6 flex-wrap">
