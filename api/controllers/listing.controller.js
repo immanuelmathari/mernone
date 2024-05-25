@@ -79,3 +79,60 @@ export const getListing = async(req,res,next) => {
         return next(error);
     }
 }
+
+export const getListings = async(req,res,next) => {
+    try {
+        // limit is for pagination
+        // startIndex is to know which page we are in
+        const limit = parseInt(req.query.limit) || 9;
+        const startIndex = parseInt(req.query.startIndex) || 0;
+
+        let offer = req.query.offer;
+        if(offer === undefined  || offer === 'false')
+        {
+            // this is the way to search in a database
+            offer = {$in : [false, true] }; // if there is no offer search both false and true. yani bring out all of them
+        }
+
+        let furnished = req.query.furnished;
+        if (furnished === undefined  || furnished === 'false')
+        {
+            furnished = {$in : [false,true]};
+        }
+
+        let parking = req.query.parking;
+        if (parking === undefined  || parking === 'false')
+        {
+            parking = {$in : [false,true]};
+        }
+
+        let type = req.query.type;
+        if (type === undefined  || type == 'all')
+        {
+            type = {$in: ['sale','rent']};
+        }
+
+        // the search term we use to search
+        const searchTerm = req.query.searchTerm  || '';
+
+        const sort = req.query.sort  || 'createdAt';
+
+        const order = req.query.order || 'desc';
+
+        const listings = await Listing.find({
+            // we want to search using regex and we search either if its lowercase or uppercase
+            name: {$regex: searchTerm, $options: 'i'},
+            offer,
+            furnished,
+            parking,
+            type,
+        }).sort(
+            {[sort] : order}
+        ).limit(limit).skip(startIndex); 
+
+        return res.status(200).json(listings);
+    } catch(error)
+    {
+        next(error);
+    }
+}
