@@ -15,9 +15,10 @@ export default function Search() {
     }); 
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
     // console.log(sideBarData);
-    console.log(listings);
+    // console.log(listings);
 
     const handleChange = (e) => {
         // the inputs are different so we need to have some conditions
@@ -81,10 +82,20 @@ export default function Search() {
         const fetchListings = async () => {
             // after doing everything, now this function is what we use to call the data
             setLoading(true);
+            setShowMore(false);
             const searchQuery = urlParams.toString();
             // use our router
             const res = await fetch(`/api/listing/get?${searchQuery}`);
             const data = await res.json();
+            
+            if(data.length > 8 ) {
+                setShowMore(true);
+            } else 
+            {
+                setShowMore(false);
+            }
+
+
             setListings(data);
             setLoading(false);
         };
@@ -92,7 +103,23 @@ export default function Search() {
         fetchListings();
 
     }, [location.search]); // we are saying that if there is a change in the location search we change the sidebar data
-  return (
+    const onShowMoreClick = async () => {
+        // it will fetch data based on the index
+        const numberOfListings = listings.length;
+        const startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(location.search);
+        // now we set our url from this point
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/api/listing/api?${searchQuery}`);
+        const data = await res.json();
+        if (data.length < 9) {
+            setShowMore(false);
+        }
+        // we setListing, as we keep previous listing and set new listing
+        setListings([...listings, ...data]); // it will be added onto it
+    }
+    return (
     <div className='flex flex-col md:flex-row'>
         <div className='p-7 border-b-2 md:border-r-2 md:min-h-screen'>
             <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
@@ -168,6 +195,12 @@ export default function Search() {
                         <ListingCard key={listing._id} listing={listing}/>
                     ))
                 }
+
+                {showMore && (
+                    <button onClick={onShowMoreClick} className='text-green-700 hover:underline p-7 text-center'>
+                        Show More
+                    </button>
+                )}
             </div>
         </div>
     </div>
