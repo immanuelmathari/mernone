@@ -6,6 +6,7 @@ import authrouter from "./routes/auth.route.js"
 import listingRouter from "./routes/listing.route.js"
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import path from 'path';
 
 dotenv.config();
 
@@ -15,7 +16,10 @@ Mongoose.connect(process.env.MONGO)
         })
         .catch((err) => {
             console.log(err);
-        })
+        });
+
+// we create dynamic path
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -62,7 +66,11 @@ app.use('/api/auth', authrouter);
 app.use('/api/listing', listingRouter);
 // so now we create this route
 
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
+app.get('*' , (req,res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
 // this is a middleware
 app.use((err,req,res,next) => {
