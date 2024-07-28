@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import OAuth from '../components/OAuth';
 
-export default function SignIn() {
+export default function Signin() {
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
 
