@@ -35,7 +35,7 @@ export default function CreateListing() {
 
     const handleImageSumbit = (e) => {
         // e.preventDefault();  bcz we aint in the form
-        if(files.length > 0 && files.length  < 7){
+        if(files.length > 0 && files.length + formData.imageUrls.length  < 7){
             setUploading(true);
             setImageUploadError(false);
             const promises = []; // we'll have more than one asynchronous behaious because we have many files submitting
@@ -220,7 +220,7 @@ export default function CreateListing() {
                 </p>
                 <div className='flex gap-4'>
                     <input type='file' id='images' accept="image/*" multiple className='p-3 border border-gray-300 rounded w-full' onChange={(e) => setFiles(e.target.files)} />
-                    <button className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80' onClick={handleImageSumbit}  disabled={uploading} >
+                    <button className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80' type='button' onClick={handleImageSumbit}  disabled={uploading} >
                         {uploading ? 'Uploading...' : 'Upload'}
                     </button>
                 </div>
